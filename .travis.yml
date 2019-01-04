@@ -1,0 +1,32 @@
+language: generic
+env:
+  global:
+    - CLI_VERSION=latest
+  matrix:
+    - BOARD="arduino:samd:mkrwifi1010"
+    - BOARD="arduino:megaavr:uno2018"
+before_install:
+  - wget http://downloads.arduino.cc/arduino-cli/arduino-cli-$CLI_VERSION-linux64.tar.bz2
+  - tar xf arduino-cli-$CLI_VERSION-linux64.tar.bz2
+  - mkdir -p $HOME/bin
+  - mv arduino-cli-*-linux64 $HOME/bin/arduino-cli
+  - export PATH=$PATH:$HOME/bin
+  - arduino-cli core update-index
+  - if [[ "$BOARD" =~ "arduino:megaavr:" ]]; then
+      arduino-cli core install arduino:megaavr;
+    fi
+  - if [[ "$BOARD" =~ "arduino:samd:" ]]; then
+      arduino-cli core install arduino:samd;
+    fi
+  - arduino-cli lib install "WiFiNINA"
+  - buildExampleSketch() { arduino-cli compile --verbose --warnings all --fqbn $BOARD $PWD/examples/$1; }
+install:
+  - mkdir -p $HOME/Arduino/libraries
+  - ln -s $PWD $HOME/Arduino/libraries/.
+script:
+  - buildExampleSketch WiFiAdvancedCallback
+  - buildExampleSketch WiFiEcho
+  - buildExampleSketch WiFiEchoCallback
+  - buildExampleSketch WiFiSimpleReceive
+  - buildExampleSketch WiFiSimpleReceiveCallback
+  - buildExampleSketch WiFiSimpleSender
