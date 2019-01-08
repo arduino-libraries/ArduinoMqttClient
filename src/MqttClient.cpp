@@ -72,6 +72,7 @@ MqttClient::MqttClient(Client& client) :
   _rxState(MQTT_CLIENT_RX_STATE_READ_TYPE),
   _willBuffer(NULL),
   _willBufferIndex(0),
+  _willMessageIndex(0),
   _willFlags(0x00)
 {
   setTimeout(0);
@@ -181,7 +182,7 @@ int MqttClient::beginMessage(const String& topic, unsigned long size, bool retai
 
 int MqttClient::beginMessage(const char* topic, bool retain, uint8_t qos, bool dup)
 {
-  return beginMessage(topic, 0xffffffff, retain, qos, dup);
+  return beginMessage(topic, 0xffffffffL, retain, qos, dup);
 }
 
 int MqttClient::beginMessage(const String& topic, bool retain, uint8_t qos, bool dup)
