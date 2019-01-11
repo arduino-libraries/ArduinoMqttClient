@@ -785,7 +785,6 @@ int MqttClient::connect(IPAddress ip, const char* host, uint16_t port)
   _rxState = MQTT_CLIENT_RX_STATE_READ_TYPE;
   _connected = false;
   _txPacketId = 0x0000;
-  _lastRx = 0;
 
   if (host) {
     if (!_client->connect(host, port)) {
@@ -798,6 +797,8 @@ int MqttClient::connect(IPAddress ip, const char* host, uint16_t port)
       return 0;
     }
   }
+
+  _lastRx = millis();
 
   String id = _id;
   int idLength = id.length();
