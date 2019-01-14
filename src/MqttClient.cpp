@@ -567,6 +567,11 @@ void MqttClient::poll()
           if (_onMessage) {
             _onMessage(_rxLength);
           }
+
+          if (_rxLength == 0) {
+            // no payload to read, ack zero length message
+            ackRxMessage();
+          }
         }
 
         break;
@@ -574,7 +579,10 @@ void MqttClient::poll()
 
       case MQTT_CLIENT_RX_STATE_READ_PUBLISH_PAYLOAD:
       case MQTT_CLIENT_RX_STATE_DISCARD_PUBLISH_PAYLOAD: {
-        _rxLength--;
+        if (_rxLength > 0) {
+          _rxLength--;
+        }
+
         if (_rxLength == 0) {
           _rxState = MQTT_CLIENT_RX_STATE_READ_TYPE;
         } else {
@@ -688,11 +696,7 @@ int MqttClient::read(uint8_t *buf, size_t size)
       _rxLength -= result;
 
       if (_rxLength == 0) {
-        if (_txMessageQoS == 1) {
-          puback(_txPacketId);
-        } else if (_txMessageQoS == 2) {
-          pubrec(_txPacketId);
-        }
+        ackRxMessage();
 
         _rxState = MQTT_CLIENT_RX_STATE_READ_TYPE;
       }
@@ -1055,6 +1059,15 @@ int MqttClient::endPacket()
   _txBufferIndex = 0;
 
   return result;
+}
+
+void MqttClient::ackRxMessage()
+{
+  if (_rxMessageQoS == 1) {
+    puback(_rxPacketId);
+  } else if (_rxMessageQoS == 2) {
+    pubrec(_rxPacketId);
+  }
 }
 
 int MqttClient::clientRead()

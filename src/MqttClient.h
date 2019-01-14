@@ -107,6 +107,8 @@ private:
   int writeData(const void* data, size_t length);
   int endPacket();
 
+  void ackRxMessage();
+
   uint8_t clientConnected();
   int clientAvailable();
   int clientRead();
