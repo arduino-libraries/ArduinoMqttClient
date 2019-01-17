@@ -547,6 +547,10 @@ void MqttClient::poll()
 
             if (_onMessage) {
               _onMessage(_rxLength);
+
+              if (_rxLength == 0) {
+                _rxState = MQTT_CLIENT_RX_STATE_READ_TYPE;
+              }
             }
           }
         }
