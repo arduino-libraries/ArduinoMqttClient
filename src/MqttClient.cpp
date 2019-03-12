@@ -575,6 +575,10 @@ void MqttClient::poll()
           if (_rxLength == 0) {
             // no payload to read, ack zero length message
             ackRxMessage();
+
+            if (_onMessage) {
+              _rxState = MQTT_CLIENT_RX_STATE_READ_TYPE;
+            }
           }
         }
 
