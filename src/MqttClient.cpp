@@ -632,6 +632,16 @@ int MqttClient::connect(const char *host, uint16_t port)
   return connect((uint32_t)0, host, port);
 }
 
+int MqttClient::connect(IPAddress ip, uint16_t port, int /* timeout */)
+{
+  return connect(ip, port);
+}
+
+int MqttClient::connect(const char *host, uint16_t port, int /* timeout */)
+{
+  return connect(host, port);
+}
+
 size_t MqttClient::write(uint8_t b)
 {
   return write(&b, sizeof(b));
