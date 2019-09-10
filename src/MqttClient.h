@@ -84,6 +84,8 @@ public:
   void setUsernamePassword(const char* username, const char* password);
   void setUsernamePassword(const String& username, const String& password);
 
+  void setCleanSession(bool cleanSession);
+
   void setKeepAliveInterval(unsigned long interval);
   void setConnectionTimeout(unsigned long timeout);
 
@@ -124,6 +126,7 @@ private:
   String _id;
   String _username;
   String _password;
+  bool _cleanSession;
 
   unsigned long _keepAliveInterval;
   unsigned long _connectionTimeout;

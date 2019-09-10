@@ -69,6 +69,10 @@ void setup() {
   // You can provide a username and password for authentication
   // mqttClient.setUsernamePassword("username", "password");
 
+  // By default the library connects with the "clean session" flag set,
+  // you can disable this behaviour by using
+  // mqttClient.setCleanSession(false);
+
   // set a will message, used by the broker when the connection dies unexpectantly
   // you must know the size of the message before hand, and it must be set before connecting
   String willPayload = "oh no!";

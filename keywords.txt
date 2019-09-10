@@ -40,7 +40,7 @@ connected	KEYWORD2
 
 setId	KEYWORD2
 setUsernamePassword	KEYWORD2
-
+setCleanSession	KEYWORD2
 setKeepAliveInterval 	KEYWORD2
 setConnectionTimeout	KEYWORD2
 
