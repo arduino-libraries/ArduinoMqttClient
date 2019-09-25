@@ -67,6 +67,7 @@ public:
   // from Client
   virtual int connect(IPAddress ip, uint16_t port = 1883);
   virtual int connect(const char *host, uint16_t port = 1883);
+  virtual int connect(const IPAddress& ip, uint16_t port) { }; /* ESP8266 core defines this pure virtual in Client.h */
   virtual size_t write(uint8_t);
   virtual size_t write(const uint8_t *buf, size_t size);
   virtual int available();
@@ -89,6 +90,9 @@ public:
 
   int connectError() const;
   int subscribeQoS() const;
+  virtual bool flush(unsigned int maxWaitMs) { } /* ESP8266 core defines this pure virtual in Client.h */
+
+  virtual bool stop(unsigned int maxWaitMs)  { } /* ESP8266 core defines this pure virtual in Client.h */
 
 private:
   int connect(IPAddress ip, const char* host, uint16_t port);
