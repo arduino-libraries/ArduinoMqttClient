@@ -1,4 +1,3 @@
-#include "arduino_secrets.h"
 /*
   ArduinoMqttClient - WiFi Reconnect
 
