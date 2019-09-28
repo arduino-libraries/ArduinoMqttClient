@@ -77,10 +77,6 @@ void setup() {
 }
 
 void loop() {
-  // call poll() regularly to allow the library to send MQTT keep alives which
-  // avoids being disconnected by the broker
-  mqttClient.poll();
-
   // avoid having delays in loop, we'll use the strategy from BlinkWithoutDelay
   // see: File -> Examples -> 02.Digital -> BlinkWithoutDelay for more info
   unsigned long currentMillis = millis();
@@ -88,6 +84,10 @@ void loop() {
   if (currentMillis - previousMillis >= interval) {
     // save the last time a message was sent
     previousMillis = currentMillis;
+    
+    // call poll() regularly to allow the library to send MQTT keep alives which
+    // avoids being disconnected by the broker
+    mqttClient.poll();
 
     Serial.print("Sending message to topic: ");
     Serial.println(topic);
