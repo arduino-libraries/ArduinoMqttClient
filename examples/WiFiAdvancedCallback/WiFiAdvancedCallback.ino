@@ -100,7 +100,7 @@ void setup() {
   Serial.println();
 
   // subscribe to a topic
-  // the second paramter set's the QoS of the subscription,
+  // the second parameter set's the QoS of the subscription,
   // the the library supports subscribing at QoS 0, 1, or 2
   int subscribeQos = 1;
 
