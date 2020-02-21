@@ -1135,7 +1135,9 @@ int MqttClient::clientPeek()
 size_t MqttClient::clientWrite(const uint8_t *buf, size_t size)
 {
 #ifdef MQTT_CLIENT_DEBUG
-  Serial.print("TX: ");
+  Serial.print("TX[");
+  Serial.print(size);
+  Serial.print("]: ");
   for (size_t i = 0; i < size; i++) {
     uint8_t b = buf[i];
 
