@@ -5,5 +5,5 @@
 # Install Python 3
 apt-get update && apt-get install -y python3
 
-Run the standard entrypoint script
+# Run the standard entrypoint script
 /entrypoint.sh "$@"
