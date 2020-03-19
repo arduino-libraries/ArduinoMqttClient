@@ -68,7 +68,7 @@ public:
   virtual int connect(IPAddress ip, uint16_t port = 1883);
   virtual int connect(const char *host, uint16_t port = 1883);
 #ifdef ESP8266
-  virtual int connect(const IPAddress& ip, uint16_t port) { return connect(ip, port); }; /* ESP8266 core defines this pure virtual in Client.h */
+  virtual int connect(const IPAddress& ip, uint16_t port) { return 0; }; /* ESP8266 core defines this pure virtual in Client.h */
 #endif
   virtual size_t write(uint8_t);
   virtual size_t write(const uint8_t *buf, size_t size);
