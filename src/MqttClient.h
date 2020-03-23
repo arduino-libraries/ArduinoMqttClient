@@ -65,10 +65,11 @@ public:
   void poll();
 
   // from Client
-  virtual int connect(IPAddress ip, uint16_t port);
   virtual int connect(const char *host, uint16_t port);
-#ifdef ESP8266
-  virtual int connect(const IPAddress& ip, uint16_t port) { return 0; }; /* ESP8266 core defines this pure virtual in Client.h */
+#ifndef ESP8266
+  virtual int connect(IPAddress ip, uint16_t port);
+#else
+  virtual int connect(const IPAddress& ip, uint16_t port); /* ESP8266 core 2.5.0 defines this pure virtual in Client.h */
 #endif
   virtual size_t write(uint8_t);
   virtual size_t write(const uint8_t *buf, size_t size);
