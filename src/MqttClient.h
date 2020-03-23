@@ -66,7 +66,7 @@ public:
 
   // from Client
   virtual int connect(const char *host, uint16_t port);
-#ifndef ESP8266
+#ifndef ARDUINO_ARCH_ESP8266
   virtual int connect(IPAddress ip, uint16_t port);
 #else
   virtual int connect(const IPAddress& ip, uint16_t port); /* ESP8266 core 2.5.0 defines this pure virtual in Client.h */

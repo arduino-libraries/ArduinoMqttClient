@@ -623,7 +623,7 @@ void MqttClient::poll()
   }
 }
 
-#ifndef ESP8266
+#ifndef ARDUINO_ARCH_ESP8266
 int MqttClient::connect(IPAddress ip, uint16_t port)
 #else
 int MqttClient::connect(const IPAddress& ip, uint16_t port)
