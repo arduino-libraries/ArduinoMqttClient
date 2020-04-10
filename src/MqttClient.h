@@ -32,12 +32,24 @@
 #define MQTT_BAD_USER_NAME_OR_PASSWORD      4
 #define MQTT_NOT_AUTHORIZED                 5
 
+// Make this definition in your application code to use std::functions for onMessage callbacks instead of C-pointers:
+// #define MQTT_CLIENT_STD_FUNCTION_CALLBACK
+
+#ifdef MQTT_CLIENT_STD_FUNCTION_CALLBACK
+#include <functional>
+#endif
+
 class MqttClient : public Client {
 public:
   MqttClient(Client& client);
   virtual ~MqttClient();
 
+#ifdef MQTT_CLIENT_STD_FUNCTION_CALLBACK
+  typedef std::function<void(MqttClient *client, int messageSize)> MessageCallback;
+  void onMessage(MessageCallback callback);
+#else
   void onMessage(void(*)(int));
+#endif
 
   int parseMessage();
   String messageTopic() const;
@@ -128,7 +140,11 @@ private:
 private:
   Client* _client;
 
+#ifdef MQTT_CLIENT_STD_FUNCTION_CALLBACK
+  MqttClient::MessageCallback _onMessage;
+#else
   void (*_onMessage)(int);
+#endif
 
   String _id;
   String _username;
