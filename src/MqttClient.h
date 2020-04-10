@@ -141,7 +141,7 @@ private:
   Client* _client;
 
 #ifdef MQTT_CLIENT_STD_FUNCTION_CALLBACK
-  MqttClient::MessageCallback _onMessage;
+  MessageCallback _onMessage;
 #else
   void (*_onMessage)(int);
 #endif

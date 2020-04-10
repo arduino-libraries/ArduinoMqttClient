@@ -98,7 +98,7 @@ MqttClient::~MqttClient()
 }
 
 #ifdef MQTT_CLIENT_STD_FUNCTION_CALLBACK
-void MqttClient::onMessage(MqttMessageCallback callback)
+void MqttClient::onMessage(MessageCallback callback)
 #else
 void MqttClient::onMessage(void(*callback)(int))
 #endif
