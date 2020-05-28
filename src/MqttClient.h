@@ -34,8 +34,13 @@
 
 class MqttClient : public Client {
 public:
+  MqttClient(Client* client);
   MqttClient(Client& client);
   virtual ~MqttClient();
+
+
+  inline void setClient(Client& client) { _client = &client; }
+
 
   void onMessage(void(*)(int));
 
