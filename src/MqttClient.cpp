@@ -77,7 +77,8 @@ MqttClient::MqttClient(Client* client) :
   _willBuffer(NULL),
   _willBufferIndex(0),
   _willMessageIndex(0),
-  _willFlags(0x00)
+  _willFlags(0x00),
+  _tx_payload_buffer_size(TX_PAYLOAD_BUFFER_SIZE)
 {
   setTimeout(0);
 }
@@ -282,7 +283,7 @@ int MqttClient::beginWill(const String& topic, unsigned short size, bool retain,
 
 int MqttClient::beginWill(const char* topic, bool retain, uint8_t qos)
 {
-  return beginWill(topic, TX_PAYLOAD_BUFFER_SIZE, retain, qos);
+  return beginWill(topic, _tx_payload_buffer_size, retain, qos);
 }
 
 int MqttClient::beginWill(const String& topic, bool retain, uint8_t qos)
@@ -653,12 +654,12 @@ size_t MqttClient::write(const uint8_t *buf, size_t size)
     return clientWrite(buf, size);
   }
 
-  if ((_txPayloadBufferIndex + size) >= TX_PAYLOAD_BUFFER_SIZE) {
-    size = (TX_PAYLOAD_BUFFER_SIZE - _txPayloadBufferIndex);
+  if ((_txPayloadBufferIndex + size) >= _tx_payload_buffer_size) {
+    size = (_tx_payload_buffer_size - _txPayloadBufferIndex);
   }
 
   if (_txPayloadBuffer == NULL) {
-    _txPayloadBuffer = (uint8_t*)malloc(TX_PAYLOAD_BUFFER_SIZE);
+    _txPayloadBuffer = (uint8_t*)malloc(_tx_payload_buffer_size);
   }
 
   memcpy(&_txPayloadBuffer[_txPayloadBufferIndex], buf, size);
@@ -791,6 +792,11 @@ void MqttClient::setKeepAliveInterval(unsigned long interval)
 void MqttClient::setConnectionTimeout(unsigned long timeout)
 {
   _connectionTimeout = timeout;
+}
+
+void MqttClient::setTxPayloadSize(unsigned short size)
+{
+  _tx_payload_buffer_size = size;
 }
 
 int MqttClient::connectError() const
