@@ -713,7 +713,9 @@ int MqttClient::read(uint8_t *buf, size_t size)
       _rxLength -= result;
 
       if (_rxLength == 0) {
-        ackRxMessage();
+        if (!_onMessage) {
+          ackRxMessage();
+        }
 
         _rxState = MQTT_CLIENT_RX_STATE_READ_TYPE;
       }
