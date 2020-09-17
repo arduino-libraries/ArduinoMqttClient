@@ -1,0 +1,1 @@
+{"cpu":{"name":"Arduino MKR WiFi 1010","com_name":"COM23","fqbn":"arduino:samd:mkrwifi1010","flavour":"default"},"secrets":[{"name":"SECRET_SSID","value":"","isOptional":false},{"name":"SECRET_PASS","value":"","isOptional":false},{"name":"SECRET_MQTT_USER","value":"","isOptional":true},{"name":"SECRET_MQTT_PW","value":"","isOptional":true}]}
