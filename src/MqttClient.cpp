@@ -29,10 +29,12 @@
   #endif
 #endif
 
-#ifdef __AVR__
-#define TX_PAYLOAD_BUFFER_SIZE 128
-#else
-#define TX_PAYLOAD_BUFFER_SIZE 256
+#ifndef TX_PAYLOAD_BUFFER_SIZE
+  #ifdef __AVR__
+    #define TX_PAYLOAD_BUFFER_SIZE 128
+  #else
+    #define TX_PAYLOAD_BUFFER_SIZE 256
+  #endif
 #endif
 
 #define MQTT_CONNECT      1
