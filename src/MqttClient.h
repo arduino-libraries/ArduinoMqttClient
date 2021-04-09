@@ -41,6 +41,7 @@
 
 class MqttClient : public Client {
 public:
+  MqttClient(Client* client);
   MqttClient(Client& client);
   virtual ~MqttClient();
 
@@ -48,6 +49,7 @@ public:
   typedef std::function<void(MqttClient *client, int messageSize)> MessageCallback;
   void onMessage(MessageCallback callback);
 #else
+  inline void setClient(Client& client) { _client = &client; }
   void onMessage(void(*)(int));
 #endif
 

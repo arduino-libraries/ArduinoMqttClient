@@ -29,10 +29,12 @@
   #endif
 #endif
 
-#ifdef __AVR__
-#define TX_PAYLOAD_BUFFER_SIZE 128
-#else
-#define TX_PAYLOAD_BUFFER_SIZE 256
+#ifndef TX_PAYLOAD_BUFFER_SIZE
+  #ifdef __AVR__
+    #define TX_PAYLOAD_BUFFER_SIZE 128
+  #else
+    #define TX_PAYLOAD_BUFFER_SIZE 256
+  #endif
 #endif
 
 #define MQTT_CONNECT      1
@@ -61,8 +63,8 @@ enum {
   MQTT_CLIENT_RX_STATE_DISCARD_PUBLISH_PAYLOAD
 };
 
-MqttClient::MqttClient(Client& client) :
-  _client(&client),
+MqttClient::MqttClient(Client* client) :
+  _client(client),
   _onMessage(NULL),
   _cleanSession(true),
   _keepAliveInterval(60 * 1000L),
@@ -80,6 +82,11 @@ MqttClient::MqttClient(Client& client) :
   _willFlags(0x00)
 {
   setTimeout(0);
+}
+
+MqttClient::MqttClient(Client& client) : MqttClient(&client)
+{
+
 }
 
 MqttClient::~MqttClient()
