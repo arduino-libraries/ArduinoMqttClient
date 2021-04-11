@@ -1,7 +1,9 @@
-= ArduinoMqttClient Library for Arduino =
+:repository-owner: arduino-libraries
+:repository-name: ArduinoMqttClient
 
-image:https://github.com/arduino-libraries/ArduinoMqttClient/workflows/Compile%20Examples/badge.svg["Compile Examples Status", link="https://github.com/arduino-libraries/ArduinoMqttClient/actions?workflow=Compile+Examples"] image:https://github.com/arduino-libraries/ArduinoMqttClient/workflows/Spell%20Check/badge.svg["Spell Check Status", link="https://github.com/arduino-libraries/ArduinoMqttClient/actions?workflow=Spell+Check"]
+= {repository-name} Library for Arduino =
 
+image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/spell-check.yml/badge.svg["Spell Check status", link="https://github.com/{repository-owner}/{repository-name}/actions/workflows/spell-check.yml"]
 
 Allows you to send and receive MQTT messages using Arduino.
 
