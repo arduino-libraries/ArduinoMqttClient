@@ -1,27 +1,84 @@
 name: Compile Examples
-on: [push, pull_request]
+
+# See: https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows
+on:
+  push:
+    paths:
+      - ".github/workflows/compile-examples.yml"
+      - "examples/**"
+      - "src/**"
+  pull_request:
+    paths:
+      - ".github/workflows/compile-examples.yml"
+      - "examples/**"
+      - "src/**"
+  schedule:
+    # Run every Tuesday at 8 AM UTC to catch breakage caused by changes to external resources (libraries, platforms).
+    - cron: "0 8 * * TUE"
+  workflow_dispatch:
+  repository_dispatch:
+
 jobs:
- build:
-   runs-on: ubuntu-latest
-   env:
-     LIBRARIES: WiFi101 WiFiNINA
+  build:
+    name: ${{ matrix.board.fqbn }}
+    runs-on: ubuntu-latest
 
-   strategy:
-     matrix:
-       fqbn: [
-         "arduino:samd:mkr1000",
-         "arduino:samd:mkrwifi1010",
-         "arduino:samd:nano_33_iot",
-         "arduino:megaavr:uno2018",
-         '"esp8266:esp8266:huzzah" "https://arduino.esp8266.com/stable/package_esp8266com_index.json"'
-       ]
+    env:
+      SKETCHES_REPORTS_PATH: sketches-reports
 
-   steps:
-     - uses: actions/checkout@v1
-       with:
-         fetch-depth: 1
-     - name: compile-examples for official Arduino boards
-       uses: arduino/actions/libraries/compile-examples@master
-       with:
-         fqbn: ${{ matrix.fqbn }}
-         libraries: ${{ env.LIBRARIES }}
+    strategy:
+      fail-fast: false
+
+      matrix:
+        board:
+          - fqbn: arduino:megaavr:uno2018
+            platforms: |
+              - name: arduino:megaavr
+            libraries: |
+              - name: WiFiNINA
+          - fqbn: arduino:samd:mkrwifi1010
+            platforms: |
+              - name: arduino:samd
+            libraries: |
+              - name: WiFiNINA
+          - fqbn: arduino:samd:mkr1000
+            platforms: |
+              - name: arduino:samd
+            libraries: |
+              - name: WiFi101
+          - fqbn: arduino:samd:nano_33_iot
+            platforms: |
+              - name: arduino:samd
+            libraries: |
+              - name: WiFiNINA
+          - fqbn: esp8266:esp8266:huzzah
+            platforms: |
+              - name: esp8266:esp8266
+                source-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json
+            libraries: ""
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Compile examples
+        uses: arduino/compile-sketches@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fqbn: ${{ matrix.board.fqbn }}
+          platforms: ${{ matrix.board.platforms }}
+          libraries: |
+            # Install the library from the local path.
+            - source-path: ./
+            ${{ matrix.board.libraries }}
+          sketch-paths: |
+            - examples
+          enable-deltas-report: true
+          sketches-report-path: ${{ env.SKETCHES_REPORTS_PATH }}
+
+      - name: Save sketches report as workflow artifact
+        uses: actions/upload-artifact@v2
+        with:
+          if-no-files-found: error
+          path: ${{ env.SKETCHES_REPORTS_PATH }}
+          name: ${{ env.SKETCHES_REPORTS_PATH }}

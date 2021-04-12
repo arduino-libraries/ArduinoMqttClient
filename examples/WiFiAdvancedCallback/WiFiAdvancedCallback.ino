@@ -3,14 +3,14 @@
 
   This example connects to a MQTT broker and subscribes to a single topic,
   it also publishes a message to another topic every 10 seconds.
-  When a message is received it prints the message to the serial monitor,
+  When a message is received it prints the message to the Serial Monitor,
   it uses the callback functionality of the library.
 
   It also demonstrates how to set the will message, get/set QoS, 
   duplicate and retain values of messages.
 
   The circuit:
-  - Arduino MKR 1000, MKR 1010 or Uno WiFi Rev.2 board
+  - Arduino MKR 1000, MKR 1010 or Uno WiFi Rev2 board
 
   This example code is in the public domain.
 */
@@ -26,7 +26,7 @@
 
 #include "arduino_secrets.h"
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
-char ssid[] = SECRET_SSID;        // your network SSID (name)
+char ssid[] = SECRET_SSID;    // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
 
 // To connect with SSL/TLS:
@@ -56,7 +56,7 @@ void setup() {
     ; // wait for serial port to connect. Needed for native USB port only
   }
 
-  // attempt to connect to Wifi network:
+  // attempt to connect to WiFi network:
   Serial.print("Attempting to connect to WPA SSID: ");
   Serial.println(ssid);
   while (WiFi.begin(ssid, pass) != WL_CONNECTED) {
@@ -68,7 +68,7 @@ void setup() {
   Serial.println("You're connected to the network");
   Serial.println();
 
-  // You can provide a unique client ID, if not set the library uses Arduin-millis()
+  // You can provide a unique client ID, if not set the library uses Arduino-millis()
   // Each client must have a unique client ID
   // mqttClient.setId("clientId");
 
@@ -79,8 +79,8 @@ void setup() {
   // you can disable this behaviour by using
   // mqttClient.setCleanSession(false);
 
-  // set a will message, used by the broker when the connection dies unexpectantly
-  // you must know the size of the message before hand, and it must be set before connecting
+  // set a will message, used by the broker when the connection dies unexpectedly
+  // you must know the size of the message beforehand, and it must be set before connecting
   String willPayload = "oh no!";
   bool willRetain = true;
   int willQos = 1;
@@ -110,7 +110,7 @@ void setup() {
   Serial.println();
 
   // subscribe to a topic
-  // the second parameter set's the QoS of the subscription,
+  // the second parameter sets the QoS of the subscription,
   // the the library supports subscribing at QoS 0, 1, or 2
   int subscribeQos = 1;
 
@@ -129,7 +129,7 @@ void loop() {
   // send MQTT keep alives which avoids being disconnected by the broker
   mqttClient.poll();
 
-  // avoid having delays in loop, we'll use the strategy from BlinkWithoutDelay
+  // to avoid having delays in loop, we'll use the strategy from BlinkWithoutDelay
   // see: File -> Examples -> 02.Digital -> BlinkWithoutDelay for more info
   unsigned long currentMillis = millis();
 
