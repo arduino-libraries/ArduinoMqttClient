@@ -96,6 +96,7 @@ public:
 
   void setKeepAliveInterval(unsigned long interval);
   void setConnectionTimeout(unsigned long timeout);
+  void setTxPayloadSize(unsigned short size);
 
   int connectError() const;
   int subscribeQoS() const;
@@ -142,6 +143,7 @@ private:
 
   unsigned long _keepAliveInterval;
   unsigned long _connectionTimeout;
+  unsigned short _tx_payload_buffer_size;
 
   int _connectError;
   bool _connected;
