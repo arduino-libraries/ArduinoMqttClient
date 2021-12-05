@@ -69,6 +69,7 @@ MqttClient::MqttClient(Client* client) :
   _cleanSession(true),
   _keepAliveInterval(60 * 1000L),
   _connectionTimeout(30 * 1000L),
+  _tx_payload_buffer_size(TX_PAYLOAD_BUFFER_SIZE),
   _connectError(MQTT_SUCCESS),
   _connected(false),
   _subscribeQos(0x00),
@@ -79,8 +80,7 @@ MqttClient::MqttClient(Client* client) :
   _willBuffer(NULL),
   _willBufferIndex(0),
   _willMessageIndex(0),
-  _willFlags(0x00),
-  _tx_payload_buffer_size(TX_PAYLOAD_BUFFER_SIZE)
+  _willFlags(0x00)
 {
   setTimeout(0);
 }
