@@ -230,6 +230,7 @@ int MqttClient::endMessage()
             return 0;
           }
         }
+        yield();
       }
 
       // reply with PUBREL
@@ -245,6 +246,7 @@ int MqttClient::endMessage()
       if (_returnCode != -1) {
         return (_returnCode == 0);
       }
+      yield();
     }
 
     return 0;
@@ -348,6 +350,7 @@ int MqttClient::subscribe(const char* topic, uint8_t qos)
 
       return (_returnCode >= 0 && _returnCode <= 2);
     }
+    yield();
   }
 
   stop();
@@ -391,6 +394,7 @@ int MqttClient::unsubscribe(const char* topic)
     if (_returnCode != -1) {
       return (_returnCode == 0);
     }
+    yield();
   }
 
   stop();
@@ -919,6 +923,7 @@ int MqttClient::connect(IPAddress ip, const char* host, uint16_t port)
     if (_returnCode != MQTT_CONNECTION_TIMEOUT) {
       break;
     }
+    yield();
   }
 
   _connectError = _returnCode;
