@@ -802,6 +802,12 @@ void MqttClient::setConnectionTimeout(unsigned long timeout)
 
 void MqttClient::setTxPayloadSize(unsigned short size)
 {
+  if (_txPayloadBuffer) {
+    free(_txPayloadBuffer);
+    _txPayloadBuffer = NULL;
+    _txPayloadBufferIndex = 0;
+  }
+    
   _tx_payload_buffer_size = size;
 }
 
