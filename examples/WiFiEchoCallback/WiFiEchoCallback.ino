@@ -17,7 +17,7 @@
   #include <WiFiNINA.h>
 #elif defined(ARDUINO_SAMD_MKR1000)
   #include <WiFi101.h>
-#elif defined(ARDUINO_ESP8266_ESP12)
+#elif defined(ARDUINO_ARCH_ESP8266)
   #include <ESP8266WiFi.h>
 #endif
 
