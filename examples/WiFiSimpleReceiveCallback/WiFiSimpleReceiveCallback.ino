@@ -18,6 +18,8 @@
   #include <WiFi101.h>
 #elif defined(ARDUINO_ESP8266_ESP12)
   #include <ESP8266WiFi.h>
+#elif defined(ARDUINO_ARCH_ESP32)
+  #include <WiFi.h>
 #endif
 
 #include "arduino_secrets.h"
