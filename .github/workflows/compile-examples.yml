@@ -51,9 +51,9 @@ jobs:
               - name: arduino:samd
             libraries: |
               - name: WiFiNINA
-          - fqbn: arduino:mbed:envie_m7
+          - fqbn: arduino:mbed_portenta:envie_m7
             platforms: |
-              - name: arduino:mbed
+              - name: arduino:mbed_portenta
             libraries: ""
           - fqbn: arduino:mbed_nicla:nicla_vision
             platforms: |
