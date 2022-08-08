@@ -51,6 +51,14 @@ jobs:
               - name: arduino:samd
             libraries: |
               - name: WiFiNINA
+          - fqbn: arduino:mbed_portenta:envie_m7
+            platforms: |
+              - name: arduino:mbed_portenta
+            libraries: ""
+          - fqbn: arduino:mbed_nicla:nicla_vision
+            platforms: |
+              - name: arduino:mbed_nicla
+            libraries: ""
           - fqbn: esp8266:esp8266:huzzah
             platforms: |
               - name: esp8266:esp8266
