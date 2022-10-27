@@ -105,7 +105,11 @@ MqttClient::~MqttClient()
   }
 }
 
+#ifdef MQTT_CLIENT_STD_FUNCTION_CALLBACK
+void MqttClient::onMessage(MessageCallback callback)
+#else
 void MqttClient::onMessage(void(*callback)(int))
+#endif
 {
   _onMessage = callback;
 }
@@ -562,7 +566,11 @@ void MqttClient::poll()
             _rxState = MQTT_CLIENT_RX_STATE_READ_PUBLISH_PAYLOAD;
 
             if (_onMessage) {
+#ifdef MQTT_CLIENT_STD_FUNCTION_CALLBACK
+              _onMessage(this,_rxLength);
+#else
               _onMessage(_rxLength);
+#endif
 
               if (_rxLength == 0) {
                 _rxState = MQTT_CLIENT_RX_STATE_READ_TYPE;
@@ -585,7 +593,11 @@ void MqttClient::poll()
           _rxState = MQTT_CLIENT_RX_STATE_READ_PUBLISH_PAYLOAD;
 
           if (_onMessage) {
+#ifdef MQTT_CLIENT_STD_FUNCTION_CALLBACK
+            _onMessage(this,_rxLength);
+#else
             _onMessage(_rxLength);
+#endif
           }
 
           if (_rxLength == 0) {
