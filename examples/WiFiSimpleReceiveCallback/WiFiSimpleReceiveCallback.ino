@@ -53,7 +53,7 @@ void setup() {
   while (WiFi.begin(ssid, pass) != WL_CONNECTED) {
     // failed, retry
     Serial.print(".");
-    delay(5000);
+    delay(15000);
   }
 
   Serial.println("You're connected to the network");
