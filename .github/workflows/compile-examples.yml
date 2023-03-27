@@ -59,6 +59,9 @@ jobs:
             platforms: |
               - name: arduino:mbed_nicla
             libraries: ""
+          - fqbn: arduino:mbed_giga:giga
+            platforms: |
+              - name: arduino:mbed_giga
           - fqbn: esp8266:esp8266:huzzah
             platforms: |
               - name: esp8266:esp8266
