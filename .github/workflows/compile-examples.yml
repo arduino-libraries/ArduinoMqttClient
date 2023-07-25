@@ -59,9 +59,26 @@ jobs:
             platforms: |
               - name: arduino:mbed_nicla
             libraries: ""
+          - fqbn: arduino:mbed_opta:opta
+            platforms: |
+              - name: arduino:mbed_opta
+            libraries: ""
           - fqbn: arduino:mbed_giga:giga
             platforms: |
               - name: arduino:mbed_giga
+            libraries: ""
+          - fqbn: arduino:renesas_portenta:portenta_c33
+            platforms: |
+              - name: arduino:renesas_portenta
+            libraries: ""
+          - fqbn: arduino:renesas_uno:unor4wifi
+            platforms: |
+              - name: arduino:renesas_uno
+            libraries: ""
+          - fqbn: arduino:esp32:nano_nora
+            platforms: |
+              - name: arduino:esp32
+            libraries: ""
           - fqbn: esp8266:esp8266:huzzah
             platforms: |
               - name: esp8266:esp8266
