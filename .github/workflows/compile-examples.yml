@@ -36,59 +36,72 @@ jobs:
               - name: arduino:megaavr
             libraries: |
               - name: WiFiNINA
+            artifact-name-suffix: arduino-megaavr-uno2018
           - fqbn: arduino:samd:mkrwifi1010
             platforms: |
               - name: arduino:samd
             libraries: |
               - name: WiFiNINA
+            artifact-name-suffix: arduino-samd-mkrwifi1010
           - fqbn: arduino:samd:mkr1000
             platforms: |
               - name: arduino:samd
             libraries: |
               - name: WiFi101
+            artifact-name-suffix: arduino-samd-mkr1000
           - fqbn: arduino:samd:nano_33_iot
             platforms: |
               - name: arduino:samd
             libraries: |
               - name: WiFiNINA
+            artifact-name-suffix: arduino-samd-nano_33_iot
           - fqbn: arduino:mbed_portenta:envie_m7
             platforms: |
               - name: arduino:mbed_portenta
             libraries: ""
+            artifact-name-suffix: arduino-mbed_portenta-envie_m7
           - fqbn: arduino:mbed_nicla:nicla_vision
             platforms: |
               - name: arduino:mbed_nicla
             libraries: ""
+            artifact-name-suffix: arduino-mbed_nicla-nicla_vision
           - fqbn: arduino:mbed_opta:opta
             platforms: |
               - name: arduino:mbed_opta
             libraries: ""
+            artifact-name-suffix: arduino-mbed_opta-opta
           - fqbn: arduino:mbed_giga:giga
             platforms: |
               - name: arduino:mbed_giga
             libraries: ""
+            artifact-name-suffix: arduino-mbed_giga-giga
           - fqbn: arduino:renesas_portenta:portenta_c33
             platforms: |
               - name: arduino:renesas_portenta
             libraries: ""
+            artifact-name-suffix: arduino-renesas_portenta-portenta_c33
           - fqbn: arduino:renesas_uno:unor4wifi
             platforms: |
               - name: arduino:renesas_uno
             libraries: ""
+            artifact-name-suffix: arduino-renesas_uno-unor4wifi
           - fqbn: arduino:esp32:nano_nora
             platforms: |
               - name: arduino:esp32
             libraries: ""
+            artifact-name-suffix: arduino-esp32-nano_nora
           - fqbn: esp8266:esp8266:huzzah
             platforms: |
               - name: esp8266:esp8266
                 source-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json
             libraries: ""
+            artifact-name-suffix: esp8266-esp8266-huzzah
           - fqbn: "esp32:esp32:esp32"
             platforms: |
               - name: esp32:esp32
                 source-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
             libraries: ""
+            artifact-name-suffix: esp32-esp32-esp32
 
     steps:
       - name: Checkout repository
@@ -114,4 +127,4 @@ jobs:
         with:
           if-no-files-found: error
           path: ${{ env.SKETCHES_REPORTS_PATH }}
-          name: ${{ env.SKETCHES_REPORTS_PATH }}
+          name: sketches-report-${{ matrix.board.artifact-name-suffix }}
