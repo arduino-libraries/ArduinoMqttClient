@@ -657,6 +657,20 @@ int MqttClient::connect(const char *host, uint16_t port)
   return connect((uint32_t)0, host, port);
 }
 
+#ifdef ARDUINO_ARCH_ESP32
+int MqttClient::connect(IPAddress ip, uint16_t port, int32_t timeout)
+{
+  setConnectionTimeout(timeout);
+  return connect(ip, port);
+}
+
+int MqttClient::connect(const char *host, uint16_t port, int32_t timeout)
+{
+  setConnectionTimeout(timeout);
+  return connect(host, port);
+}
+#endif
+
 size_t MqttClient::write(uint8_t b)
 {
   return write(&b, sizeof(b));

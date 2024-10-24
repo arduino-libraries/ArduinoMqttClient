@@ -84,6 +84,10 @@ public:
 #ifdef ESP8266
   virtual int connect(const IPAddress& ip, uint16_t port) { return 0; }; /* ESP8266 core defines this pure virtual in Client.h */
 #endif
+#ifdef ARDUINO_ARCH_ESP32
+  virtual int connect(IPAddress ip, uint16_t port, int32_t timeout);
+  virtual int connect(const char *host, uint16_t port, int32_t timeout);
+#endif
   virtual size_t write(uint8_t);
   virtual size_t write(const uint8_t *buf, size_t size);
   virtual int available();
