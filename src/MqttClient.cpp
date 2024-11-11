@@ -273,7 +273,7 @@ int MqttClient::publish(const String& topic, const char* payload, bool retain, u
   publish(topic.c_str(), payload, retain, qos, dup);
 }
 
-int MqttClient::publish(const const char* topic, String& payload, bool retain, uint8_t qos, bool dup) {
+int MqttClient::publish(const char* topic, String& payload, bool retain, uint8_t qos, bool dup) {
   publish(topic, payload.c_str(), retain, qos, dup);
 }
 

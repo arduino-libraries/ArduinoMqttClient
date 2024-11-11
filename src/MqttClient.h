@@ -66,7 +66,7 @@ public:
   int endMessage();
   int publish(const char* topic, const char* payload, bool retain = false, uint8_t qos = 0, bool dup = false);
   int publish(const String& topic, const char* payload, bool retain = false, uint8_t qos = 0, bool dup = false);
-  int publish(const const char* topic, String& payload, bool retain = false, uint8_t qos = 0, bool dup = false);
+  int publish(const char* topic, String& payload, bool retain = false, uint8_t qos = 0, bool dup = false);
   int publish(const String& topic, String& payload, bool retain = false, uint8_t qos = 0, bool dup = false);
 
   int beginWill(const char* topic, unsigned short size, bool retain, uint8_t qos);
