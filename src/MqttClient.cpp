@@ -270,15 +270,15 @@ int MqttClient::publish(const char* topic, const char* payload, bool retain, uin
 }
 
 int MqttClient::publish(const String& topic, const char* payload, bool retain, uint8_t qos, bool dup) {
-  publish(topic.c_str(), payload, retain, qos, dup);
+  return publish(topic.c_str(), payload, retain, qos, dup);
 }
 
 int MqttClient::publish(const char* topic, String& payload, bool retain, uint8_t qos, bool dup) {
-  publish(topic, payload.c_str(), retain, qos, dup);
+  return publish(topic, payload.c_str(), retain, qos, dup);
 }
 
-int MqttClient::publish(const String& topic, String& payload, bool retain, uint8_t qos, bool dup){
-  publish(topic.c_str(), payload.c_str(), retain, qos, dup);
+int MqttClient::publish(const String& topic, String& payload, bool retain, uint8_t qos, bool dup) {
+  return publish(topic.c_str(), payload.c_str(), retain, qos, dup);
 }
 
 int MqttClient::beginWill(const char* topic, unsigned short size, bool retain, uint8_t qos)
