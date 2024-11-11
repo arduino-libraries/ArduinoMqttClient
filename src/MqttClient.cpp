@@ -259,6 +259,28 @@ int MqttClient::endMessage()
   return 1;
 }
 
+int MqttClient::publish(const char* topic, const char* payload, bool retain, uint8_t qos, bool dup) {
+  int ret = beginMessage(topic, strlen_P(payload), retain, qos, dup);
+  if (!ret) {
+    return ret;
+  }
+  print(payload);
+  ret = endMessage();
+  return ret;
+}
+
+int MqttClient::publish(const String& topic, const char* payload, bool retain, uint8_t qos, bool dup) {
+  publish(topic.c_str(), payload, retain, qos, dup);
+}
+
+int MqttClient::publish(const const char* topic, String& payload, bool retain, uint8_t qos, bool dup) {
+  publish(topic, payload.c_str(), retain, qos, dup);
+}
+
+int MqttClient::publish(const String& topic, String& payload, bool retain, uint8_t qos, bool dup){
+  publish(topic.c_str(), payload.c_str(), retain, qos, dup);
+}
+
 int MqttClient::beginWill(const char* topic, unsigned short size, bool retain, uint8_t qos)
 {
   int topicLength = strlen(topic);
