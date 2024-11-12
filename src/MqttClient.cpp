@@ -542,7 +542,7 @@ int MqttClient::poll()
           if (_rxMessageQoS) {
             if (_rxLength < (_rxMessageTopicLength + 2)) {
               stop();
-              return;
+              return 0;
             }
           } else {
             if (_rxLength < _rxMessageTopicLength) {
