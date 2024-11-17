@@ -265,8 +265,8 @@ int MqttClient::endMessage()
  * @param  topic The topic to publish to. 
  * @param  payload The payload to publish.
  * @param  retain Publish the MQTT message with the retain flag. Default false.
- * @param  qos The Quality of Service of the MQTT message. [0 .. 2]. Default 0.
- * @param  dup Set or reset the duplicate flag of MQTT message. Default false (reset).
+ * @param  qos The quality of service of the MQTT message. [0 .. 2]. Default 0.
+ * @param  dup Set or reset the duplicate flag of the MQTT message. Default false (reset).
  * @return 0 - Failed to send message.
  *         1 - Successfully send message.
  */
@@ -286,8 +286,8 @@ int MqttClient::publish(const char* topic, const char* payload, bool retain, uin
  * @param  topic The topic to publish to. 
  * @param  payload The payload to publish.
  * @param  retain Publish the MQTT message with the retain flag. Default false.
- * @param  qos The Quality of Service of the MQTT message. [0 .. 2]. Default 0.
- * @param  dup Set or reset the duplicate flag of MQTT message. Default false (reset).
+ * @param  qos The quality of service of the MQTT message. [0 .. 2]. Default 0.
+ * @param  dup Set or reset the duplicate flag of the MQTT message. Default false (reset).
  * @return 0 - Failed to send message.
  *         1 - Successfully send message.
  */
@@ -301,8 +301,8 @@ int MqttClient::publish(const String& topic, const char* payload, bool retain, u
  * @param  topic The topic to publish to. 
  * @param  payload The payload to publish.
  * @param  retain Publish the MQTT message with the retain flag. Default false.
- * @param  qos The Quality of Service of the MQTT message. [0 .. 2]. Default 0.
- * @param  dup Set or reset the duplicate flag of MQTT message. Default false (reset).
+ * @param  qos The quality of service of the MQTT message. [0 .. 2]. Default 0.
+ * @param  dup Set or reset the duplicate flag of the MQTT message. Default false (reset).
  * @return 0 - Failed to send message.
  *         1 - Successfully send message.
  */
@@ -316,8 +316,8 @@ int MqttClient::publish(const char* topic, String& payload, bool retain, uint8_t
  * @param  topic The topic to publish to. 
  * @param  payload The payload to publish.
  * @param  retain Publish the MQTT message with the retain flag. Default false.
- * @param  qos The Quality of Service of the MQTT message. [0 .. 2]. Default 0.
- * @param  dup Set or reset the duplicate flag of MQTT message. Default false (reset).
+ * @param  qos The quality of service of the MQTT message. [0 .. 2]. Default 0.
+ * @param  dup Set or reset the duplicate flag of the MQTT message. Default false (reset).
  * @return 0 - Failed to send message.
  *         1 - Successfully send message.
  */
