@@ -272,11 +272,10 @@ int MqttClient::endMessage()
  */
 int MqttClient::publish(const char* topic, const char* payload, bool retain, uint8_t qos, bool dup) {
   int ret = beginMessage(topic, strlen_P(payload), retain, qos, dup);
-  if (!ret) {
-    return ret;
+  if (ret) {
+    print(payload);
+    ret = endMessage();
   }
-  print(payload);
-  ret = endMessage();
   return ret;
 }
 
