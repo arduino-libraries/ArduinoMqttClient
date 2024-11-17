@@ -260,7 +260,7 @@ int MqttClient::endMessage()
 }
 
 /**
- * @brief  Publish a MQTT messages to the broker.
+ * @brief  Publish a MQTT message to the broker.
  * 
  * @param  topic The topic to publish to. 
  * @param  payload The payload to publish.
@@ -281,7 +281,7 @@ int MqttClient::publish(const char* topic, const char* payload, bool retain, uin
 }
 
 /**
- * @brief  Publish a MQTT messages to the broker.
+ * @brief  Publish a MQTT message to the broker.
  * 
  * @param  topic The topic to publish to. 
  * @param  payload The payload to publish.
@@ -296,7 +296,7 @@ int MqttClient::publish(const String& topic, const char* payload, bool retain, u
 }
 
 /**
- * @brief  Publish a MQTT messages to the broker.
+ * @brief  Publish a MQTT message to the broker.
  * 
  * @param  topic The topic to publish to. 
  * @param  payload The payload to publish.
@@ -311,7 +311,7 @@ int MqttClient::publish(const char* topic, String& payload, bool retain, uint8_t
 }
 
 /**
- * @brief  Publish a MQTT messages to the broker.
+ * @brief  Publish a MQTT message to the broker.
  * 
  * @param  topic The topic to publish to. 
  * @param  payload The payload to publish.
