@@ -171,9 +171,9 @@ int MqttClient::messageRetain() const
   return -1;
 }
 
-int MqttClient::beginMessage(const char* topic, unsigned long size, bool retain, uint8_t qos, bool dup)
+int MqttClient::beginMessage(const String& topic, unsigned long size, bool retain, uint8_t qos, bool dup)
 {
-  _txMessageTopic = topic;
+  _txMessageTopic = topic.c_str();
   _txMessageRetain = retain;
   _txMessageQoS = qos;
   _txMessageDup = dup;
@@ -191,19 +191,9 @@ int MqttClient::beginMessage(const char* topic, unsigned long size, bool retain,
   return 1;
 }
 
-int MqttClient::beginMessage(const String& topic, unsigned long size, bool retain, uint8_t qos, bool dup)
-{
-  return beginMessage(topic.c_str(), size, retain, qos, dup);
-}
-
-int MqttClient::beginMessage(const char* topic, bool retain, uint8_t qos, bool dup)
-{
-  return beginMessage(topic, 0xffffffffL, retain, qos, dup);
-}
-
 int MqttClient::beginMessage(const String& topic, bool retain, uint8_t qos, bool dup)
 {
-  return beginMessage(topic.c_str(), retain, qos, dup);
+  return beginMessage(topic, 0xffffffffL, retain, qos, dup);
 }
 
 int MqttClient::endMessage()
@@ -259,9 +249,9 @@ int MqttClient::endMessage()
   return 1;
 }
 
-int MqttClient::beginWill(const char* topic, unsigned short size, bool retain, uint8_t qos)
+int MqttClient::beginWill(const String& topic, unsigned short size, bool retain, uint8_t qos)
 {
-  int topicLength = strlen(topic);
+  int topicLength = topic.length();
   size_t willLength = (2 + topicLength + 2 + size);
 
   if (qos > 2) {
@@ -272,7 +262,7 @@ int MqttClient::beginWill(const char* topic, unsigned short size, bool retain, u
 
   _txBuffer = _willBuffer;
   _txBufferIndex = 0;
-  writeString(topic, topicLength);
+  writeString(topic.c_str(), topic.length());
   write16(0); // dummy size for now
   _willMessageIndex = _txBufferIndex;
 
@@ -284,19 +274,9 @@ int MqttClient::beginWill(const char* topic, unsigned short size, bool retain, u
   return 0;
 }
 
-int MqttClient::beginWill(const String& topic, unsigned short size, bool retain, uint8_t qos)
-{
-  return beginWill(topic.c_str(), size, retain, qos);
-}
-
-int MqttClient::beginWill(const char* topic, bool retain, uint8_t qos)
-{
-  return beginWill(topic, _tx_payload_buffer_size, retain, qos);
-}
-
 int MqttClient::beginWill(const String& topic, bool retain, uint8_t qos)
 {
-  return beginWill(topic.c_str(), retain, qos);
+  return beginWill(topic, _tx_payload_buffer_size, retain, qos);
 }
 
 int MqttClient::endWill()
@@ -314,9 +294,10 @@ int MqttClient::endWill()
   return 1;
 }
 
-int MqttClient::subscribe(const char* topic, uint8_t qos)
+int MqttClient::subscribe(const String& topic, uint8_t qos)
+
 {
-  int topicLength = strlen(topic);
+  int topicLength = topic.length();
   int remainingLength = topicLength + 5;
 
   if (qos > 2) {
@@ -334,7 +315,7 @@ int MqttClient::subscribe(const char* topic, uint8_t qos)
 
   beginPacket(MQTT_SUBSCRIBE, 0x02, remainingLength, packetBuffer);
   write16(_txPacketId);
-  writeString(topic, topicLength);
+  writeString(topic.c_str(), topicLength);
   write8(qos);
 
   if (!endPacket()) {
@@ -362,14 +343,9 @@ int MqttClient::subscribe(const char* topic, uint8_t qos)
   return 0;
 }
 
-int MqttClient::subscribe(const String& topic, uint8_t qos)
+int MqttClient::unsubscribe(const String& topic)
 {
-  return subscribe(topic.c_str(), qos);
-}
-
-int MqttClient::unsubscribe(const char* topic)
-{
-  int topicLength = strlen(topic);
+  int topicLength = topic.length();
   int remainingLength = topicLength + 4;
 
   _txPacketId++;
@@ -382,7 +358,7 @@ int MqttClient::unsubscribe(const char* topic)
 
   beginPacket(MQTT_UNSUBSCRIBE, 0x02, remainingLength, packetBuffer);
   write16(_txPacketId);
-  writeString(topic, topicLength);
+  writeString(topic.c_str(), topicLength);
 
   if (!endPacket()) {
     stop();
@@ -404,11 +380,6 @@ int MqttClient::unsubscribe(const char* topic)
   stop();
 
   return 0;
-}
-
-int MqttClient::unsubscribe(const String& topic)
-{
-  return unsubscribe(topic.c_str());
 }
 
 void MqttClient::poll()
@@ -775,20 +746,9 @@ MqttClient::operator bool()
   return true;
 }
 
-void MqttClient::setId(const char* id)
-{
-  _id = id;
-}
-
 void MqttClient::setId(const String& id)
 {
   _id = id;
-}
-
-void MqttClient::setUsernamePassword(const char* username, const char* password)
-{
-  _username = username;
-  _password = password;
 }
 
 void MqttClient::setUsernamePassword(const String& username, const String& password)
