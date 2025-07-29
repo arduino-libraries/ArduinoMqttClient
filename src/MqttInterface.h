@@ -1,5 +1,4 @@
 #pragma once
-#include <functional>
 #include <Client.h>
 
 // The Idea for this section of the library is to allow the usage of different implementation for Mqtt Clients
@@ -33,8 +32,17 @@ public:
 
 using Topic = const char* const;
 
-// for incoming published messages
-using MqttReceiveCallback = std::function<void(Topic, IStream&)>;
+#if defined(__has_include)
+  // Check if string_view is available and usable
+    #if __has_include(<functional>)
+        #include <functional>
+
+        // for incoming published messages
+        using MqttReceiveCallback = std::function<void(Topic, IStream&)>;
+    #endif
+#else
+    typedef void(*MqttReceiveCallback)(Topic, IStream&)>;
+#endif
 
 // TODO MQTT 5.0 stuff
 
