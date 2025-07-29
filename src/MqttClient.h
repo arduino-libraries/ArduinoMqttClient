@@ -39,6 +39,8 @@
 #include <functional>
 #endif
 
+namespace arduino {
+
 class MqttClient : public Client {
 public:
   MqttClient(Client* client);
@@ -196,5 +198,6 @@ private:
   size_t _willMessageIndex;
   uint8_t _willFlags;
 };
+}
 
 #endif
