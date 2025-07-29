@@ -118,7 +118,7 @@ void setup() {
   // subscribe to a topic
   // the second parameter sets the QoS of the subscription,
   // the the library supports subscribing at QoS 0, 1, or 2
-  int subscribeQos = 1;
+  MqttQos subscribeQos = MqttQos1;
 
   mqttClient.subscribe(inTopic, subscribeQos);
 
