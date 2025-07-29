@@ -171,6 +171,98 @@ int MqttClient::messageRetain() const
   return -1;
 }
 
+void MqttClient::setClient(arduino::Client* client) {
+  if(_client != nullptr && _client->connected()) {
+    // TODO if the current client is connected we cannot perform the change, first call disconnect
+    return;
+  }
+
+  _client = client;
+}
+
+void MqttClient::setReceiveCallback(MqttReceiveCallback cbk) {
+  _cbk = cbk;
+}
+
+class MqttReadStream: public IStream {
+public:
+  MqttReadStream(MqttClient& ref, int available)
+  : ref(ref), _available(available) { }
+
+  size_t readBytes(uint8_t* buf, size_t s) override {
+    size_t to_read = s < _available ? s : _available;
+    to_read = ref.readBytes(buf, to_read);
+    _available -= to_read;
+    return to_read;
+  }
+
+  int available() override { return _available; }
+
+  int read() override {
+    if(_available > 0) {
+      _available--;
+      return ref.read();
+    } else {
+      return -1; // TODO return proper error code
+    }
+  }
+private:
+  MqttClient& ref;
+  int _available;
+};
+
+class ArduinoMqttOStream: public MqttOStream {
+public:
+  // TODO change pointer to reference, since it won't change
+	ArduinoMqttOStream(MqttClient &ref, error_t err=0)
+  : MqttOStream(err), ref(ref) { }// TODO replace err default value with success
+
+  ~ArduinoMqttOStream() {
+    ref.endMessage();
+  }
+
+  size_t write(uint8_t a) override {
+    if(rc == 1) {
+      return ref.write(a);
+    }
+    return 0;
+  }
+
+  size_t write(const uint8_t *buffer, size_t size) override {
+    if(rc == 1) {
+      return ref.write(buffer, size);
+    }
+    return 0;
+  }
+
+  int availableForWrite() override { return 0; }
+
+private:
+  MqttClient& ref;
+};
+
+
+error_t MqttClient::publish(Topic t, uint8_t payload[], size_t size, MqttQos qos, MqttPublishFlag flags) {
+  int error = this->beginMessage(t, (flags & RetainEnabled) == RetainEnabled, qos, (flags & DupEnabled) == DupEnabled);
+
+  if(error == 0) { // TODO replace this with a proper enum value
+    return error;
+  }
+
+  int res = this->write(payload, size);
+  this->endMessage();
+
+  return res;
+}
+
+MqttOStream&& MqttClient::publish(Topic t, MqttQos qos, MqttPublishFlag flags) {
+  int error = this->beginMessage(
+    t, (flags & RetainEnabled) == RetainEnabled,
+    static_cast<uint8_t>(qos), (flags & DupEnabled) == DupEnabled);
+
+  return std::move(ArduinoMqttOStream(*this, error));
+}
+
 int MqttClient::beginMessage(const char* topic, unsigned long size, bool retain, uint8_t qos, bool dup)
 {
   _txMessageTopic = topic;
@@ -259,6 +351,20 @@ int MqttClient::endMessage()
   return 1;
 }
 
+void MqttClient::setWill(
+    Topic willTopic, const uint8_t* will_message, size_t will_size, MqttQos qos, MqttPublishFlag flags) {
+  int error = this->beginWill(willTopic, (flags & RetainEnabled) == RetainEnabled, qos, (flags & DupEnabled) == DupEnabled);
+
+  if(error == 0) { // TODO replace this with a proper enum value
+    return;
+  }
+
+  int res = this->write(will_message, will_size);
+  this->endWill();
+
+  return;
+}
+
 int MqttClient::beginWill(const char* topic, unsigned short size, bool retain, uint8_t qos)
 {
   int topicLength = strlen(topic);
@@ -314,7 +420,7 @@ int MqttClient::endWill()
   return 1;
 }
 
-int MqttClient::subscribe(const char* topic, uint8_t qos)
+error_t MqttClient::subscribe(Topic topic, MqttQos qos)
 {
   int topicLength = strlen(topic);
   int remainingLength = topicLength + 5;
@@ -362,12 +468,12 @@ int MqttClient::subscribe(const char* topic, uint8_t qos)
   return 0;
 }
 
-int MqttClient::subscribe(const String& topic, uint8_t qos)
+error_t MqttClient::subscribe(const String& topic, MqttQos qos)
 {
   return subscribe(topic.c_str(), qos);
 }
 
-int MqttClient::unsubscribe(const char* topic)
+error_t MqttClient::unsubscribe(Topic topic)
 {
   int topicLength = strlen(topic);
   int remainingLength = topicLength + 4;
@@ -565,16 +671,19 @@ void MqttClient::poll()
           } else {
             _rxState = MQTT_CLIENT_RX_STATE_READ_PUBLISH_PAYLOAD;
 
-            if (_onMessage) {
+            if(_cbk) {
+              MqttReadStream stream(*this, _rxLength);
+              _cbk(_rxMessageTopic.c_str(), stream);
+            } else if (_onMessage) {
 #ifdef MQTT_CLIENT_STD_FUNCTION_CALLBACK
               _onMessage(this,_rxLength);
 #else
               _onMessage(_rxLength);
 #endif
+            }
 
-              if (_rxLength == 0) {
-                _rxState = MQTT_CLIENT_RX_STATE_READ_TYPE;
-              }
+            if ((_onMessage || _cbk) && _rxLength == 0) {
+              _rxState = MQTT_CLIENT_RX_STATE_READ_TYPE;
             }
           }
         }
@@ -592,7 +701,10 @@ void MqttClient::poll()
 
           _rxState = MQTT_CLIENT_RX_STATE_READ_PUBLISH_PAYLOAD;
 
-          if (_onMessage) {
+          if(_cbk) {
+            MqttReadStream stream(*this, _rxLength);
+            _cbk(_rxMessageTopic.c_str(), stream);
+          } else if (_onMessage) {
 #ifdef MQTT_CLIENT_STD_FUNCTION_CALLBACK
             _onMessage(this,_rxLength);
 #else
@@ -647,12 +759,12 @@ void MqttClient::poll()
   }
 }
 
-int MqttClient::connect(IPAddress ip, uint16_t port)
+error_t MqttClient::connect(IPAddress ip, uint16_t port)
 {
   return connect(ip, NULL, port);
 }
 
-int MqttClient::connect(const char *host, uint16_t port)
+error_t MqttClient::connect(const char *host, uint16_t port)
 {
   return connect((uint32_t)0, host, port);
 }
@@ -833,7 +945,7 @@ int MqttClient::subscribeQoS() const
   return _subscribeQos;
 }
 
-int MqttClient::connect(IPAddress ip, const char* host, uint16_t port)
+error_t MqttClient::connect(IPAddress ip, const char* host, uint16_t port)
 {
   if (clientConnected()) {
     _client->stop();
@@ -1041,7 +1153,7 @@ void MqttClient::pubcomp(uint16_t id)
   endPacket();
 }
 
-void MqttClient::ping()
+error_t MqttClient::ping()
 {
   uint8_t packetBuffer[2];
 
