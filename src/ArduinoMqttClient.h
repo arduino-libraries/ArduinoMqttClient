@@ -27,7 +27,7 @@ using MqttClient = ZephyrMqttClient;
 #else
 #include "MqttClient.h"
 
-using MqttClient = ArduinoMqttClient;
+using MqttClient = arduino::MqttClient;
 #endif
 
 #endif
