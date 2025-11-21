@@ -411,7 +411,12 @@ int MqttClient::unsubscribe(const String& topic)
   return unsubscribe(topic.c_str());
 }
 
-void MqttClient::poll()
+/**
+ * @brief  Call poll() regularly to receive MQTT messages and send MQTT keep alives.
+ * @return 0 - client is no longer connected.
+ *         1 - client is still connected.
+ */
+int MqttClient::poll()
 {
   if (clientAvailable() == 0 && !clientConnected()) {
     _rxState = MQTT_CLIENT_RX_STATE_READ_TYPE;
@@ -441,8 +446,7 @@ void MqttClient::poll()
         if (_rxLengthMultiplier > (128 * 128 * 128L)) {
           // malformed
           stop();
-
-          return;
+          return 0;
         }
 
         if ((b & 0x80) == 0) { // length done
@@ -469,7 +473,7 @@ void MqttClient::poll()
 
           if (malformedResponse) {
             stop();
-            return;
+            return 0;
           }
 
           if (_rxType == MQTT_PUBLISH) {
@@ -538,12 +542,12 @@ void MqttClient::poll()
           if (_rxMessageQoS) {
             if (_rxLength < (_rxMessageTopicLength + 2)) {
               stop();
-              return;
+              return 0;
             }
           } else {
             if (_rxLength < _rxMessageTopicLength) {
               stop();
-              return;
+              return 0;
             }
           }
 
@@ -645,6 +649,8 @@ void MqttClient::poll()
       stop();
     }
   }
+
+  return _connected ? 1 : 0;
 }
 
 int MqttClient::connect(IPAddress ip, uint16_t port)
@@ -1150,6 +1156,10 @@ uint8_t MqttClient::clientConnected()
   return _client->connected();
 }
 
+/**
+ * @brief  Return number of available received bytes.
+ * @return Number of available bytes received.
+ */
 int MqttClient::clientAvailable()
 {
   return _client->available();
