@@ -59,21 +59,15 @@ public:
   int messageQoS() const;
   int messageRetain() const;
 
-  int beginMessage(const char* topic, unsigned long size, bool retain = false, uint8_t qos = 0, bool dup = false);
   int beginMessage(const String& topic, unsigned long size, bool retain = false, uint8_t qos = 0, bool dup = false);
-  int beginMessage(const char* topic, bool retain = false, uint8_t qos = 0, bool dup = false);
   int beginMessage(const String& topic, bool retain = false, uint8_t qos = 0, bool dup = false);
   int endMessage();
 
-  int beginWill(const char* topic, unsigned short size, bool retain, uint8_t qos);
   int beginWill(const String& topic, unsigned short size, bool retain, uint8_t qos);
-  int beginWill(const char* topic, bool retain, uint8_t qos);
   int beginWill(const String& topic, bool retain, uint8_t qos);
   int endWill();
 
-  int subscribe(const char* topic, uint8_t qos = 0);
   int subscribe(const String& topic, uint8_t qos = 0);
-  int unsubscribe(const char* topic);
   int unsubscribe(const String& topic);
 
   void poll();
@@ -95,10 +89,8 @@ public:
   virtual uint8_t connected();
   virtual operator bool();
 
-  void setId(const char* id);
   void setId(const String& id);
 
-  void setUsernamePassword(const char* username, const char* password);
   void setUsernamePassword(const String& username, const String& password);
 
   void setCleanSession(bool cleanSession);
