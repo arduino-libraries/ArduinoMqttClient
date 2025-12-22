@@ -20,6 +20,14 @@
 #ifndef _ARDUINO_MQTT_CLIENT_H_
 #define _ARDUINO_MQTT_CLIENT_H_
 
+#if defined(__ZEPHYR__) && __ZEPHYR__ == 1 && defined(CONFIG_MQTT_LIB)
+#include "implementations/ZephyrMqttClient.h"
+
+using MqttClient = ZephyrMqttClient;
+#else
 #include "MqttClient.h"
+
+using MqttClient = arduino::MqttClient;
+#endif
 
 #endif
