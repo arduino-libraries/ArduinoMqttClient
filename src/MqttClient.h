@@ -21,7 +21,7 @@
 #define _MQTT_CLIENT_H_
 
 #include <Arduino.h>
-#include <Client.h>
+#include "MqttInterface.h"
 
 #define MQTT_CONNECTION_REFUSED            -2
 #define MQTT_CONNECTION_TIMEOUT            -1
@@ -39,9 +39,11 @@
 #include <functional>
 #endif
 
-class MqttClient : public Client {
+namespace arduino {
+
+class MqttClient : public MqttClientInterface, public Client {
 public:
-  MqttClient(Client* client);
+  MqttClient(Client* client=nullptr);
   MqttClient(Client& client);
   virtual ~MqttClient();
 
@@ -53,34 +55,51 @@ public:
   void onMessage(void(*)(int));
 #endif
 
-  int parseMessage();
-  String messageTopic() const;
-  int messageDup() const;
-  int messageQoS() const;
-  int messageRetain() const;
+  error_t publish(
+      Topic t, uint8_t payload[],
+      size_t size, MqttQos qos = QosDefault,
+      MqttPublishFlag flags = MqttPublishFlags::None);
 
-  int beginMessage(const char* topic, unsigned long size, bool retain = false, uint8_t qos = 0, bool dup = false);
-  int beginMessage(const String& topic, unsigned long size, bool retain = false, uint8_t qos = 0, bool dup = false);
-  int beginMessage(const char* topic, bool retain = false, uint8_t qos = 0, bool dup = false);
-  int beginMessage(const String& topic, bool retain = false, uint8_t qos = 0, bool dup = false);
+  error_t ping() override;
+
+  void setReceiveCallback(MqttReceiveCallback cbk);
+
+  void setWill(
+      Topic willTopic, const uint8_t* will_message,
+      size_t will_size, MqttQos qos=QosDefault,
+      MqttPublishFlag flags = MqttPublishFlags::None) override;
+
+  void setClient(arduino::Client*) override;
+
+  int parseMessage();
+  String messageTopic() const override;
+  int messageDup()      const override;
+  uint16_t messageId()  const override;
+  MqttQos messageQoS()  const override;
+  int messageRetain()   const override;
+
+  int beginMessage(const char* topic, unsigned long size, bool retain = false, uint8_t qos = QosDefault, bool dup = false);
+  int beginMessage(const String& topic, unsigned long size, bool retain = false, uint8_t qos = QosDefault, bool dup = false);
+  int beginMessage(const char* topic, bool retain = false, uint8_t qos = QosDefault, bool dup = false);
+  int beginMessage(const String& topic, bool retain = false, uint8_t qos = QosDefault, bool dup = false);
   int endMessage();
 
-  int beginWill(const char* topic, unsigned short size, bool retain, uint8_t qos);
-  int beginWill(const String& topic, unsigned short size, bool retain, uint8_t qos);
-  int beginWill(const char* topic, bool retain, uint8_t qos);
-  int beginWill(const String& topic, bool retain, uint8_t qos);
+  int beginWill(const char* topic, unsigned short size, bool retain, uint8_t qos = QosDefault);
+  int beginWill(const String& topic, unsigned short size, bool retain, uint8_t qos = QosDefault);
+  int beginWill(const char* topic, bool retain, uint8_t qos = QosDefault);
+  int beginWill(const String& topic, bool retain, uint8_t qos = QosDefault);
   int endWill();
 
-  int subscribe(const char* topic, uint8_t qos = 0);
-  int subscribe(const String& topic, uint8_t qos = 0);
-  int unsubscribe(const char* topic);
-  int unsubscribe(const String& topic);
+  error_t subscribe(Topic topic, MqttQos qos = QosDefault) override;
+  error_t subscribe(const String& topic, MqttQos qos = QosDefault);
+  error_t unsubscribe(Topic topic) override;
+  error_t unsubscribe(const String& topic);
 
-  void poll();
+  void poll() override;
 
   // from Client
-  virtual int connect(IPAddress ip, uint16_t port = 1883);
-  virtual int connect(const char *host, uint16_t port = 1883);
+  error_t connect(IPAddress ip, uint16_t port = 1883) override;
+  error_t connect(const char *host, uint16_t port = 1883) override;
 #ifdef ESP8266
   virtual int connect(const IPAddress& ip, uint16_t port) { return 0; }; /* ESP8266 core defines this pure virtual in Client.h */
 #endif
@@ -88,17 +107,17 @@ public:
   virtual size_t write(const uint8_t *buf, size_t size);
   virtual int available();
   virtual int read();
-  virtual int read(uint8_t *buf, size_t size);
+  virtual int read(uint8_t buf[], size_t size);
   virtual int peek();
   virtual void flush();
   virtual void stop();
   virtual uint8_t connected();
   virtual operator bool();
 
-  void setId(const char* id);
+  void setId(const char* id) override;
   void setId(const String& id);
 
-  void setUsernamePassword(const char* username, const char* password);
+  void setUsernamePassword(const char* username, const char* password) override;
   void setUsernamePassword(const String& username, const String& password);
 
   void setCleanSession(bool cleanSession);
@@ -121,8 +140,7 @@ private:
   void pubrec(uint16_t id);
   void pubrel(uint16_t id);
   void pubcomp(uint16_t id);
-  void ping();
-  void disconnect();
+  void disconnect() override;
 
   int beginPacket(uint8_t type, uint8_t flags, size_t length, uint8_t* buffer);
   int writeString(const char* s, uint16_t length);
@@ -195,6 +213,9 @@ private:
   uint16_t _willBufferIndex;
   size_t _willMessageIndex;
   uint8_t _willFlags;
+
+  MqttReceiveCallback _cbk;
 };
+}
 
 #endif
