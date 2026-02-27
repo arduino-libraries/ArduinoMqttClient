@@ -76,7 +76,7 @@ public:
   int unsubscribe(const char* topic);
   int unsubscribe(const String& topic);
 
-  void poll();
+  int poll();
 
   // from Client
   virtual int connect(IPAddress ip, uint16_t port = 1883);
