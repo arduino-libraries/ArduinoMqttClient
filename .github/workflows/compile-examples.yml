@@ -102,6 +102,22 @@ jobs:
                 source-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
             libraries: ""
             artifact-name-suffix: esp32-esp32-esp32
+          - fqbn: "arduino:zephyr_main:portentah7"
+            platform: |
+              - name: arduino:zephyr_main
+            artifact-name-suffix: arduino-zephyr_main-portentah7
+          - fqbn: "arduino:zephyr_main:portentac33"
+            platform: |
+              - name: arduino:zephyr_main
+            artifact-name-suffix: arduino-zephyr_main-portentac33
+          - fqbn: "arduino:zephyr_main:giga"
+            platform: |
+              - name: arduino:zephyr_main
+            artifact-name-suffix: arduino-zephyr_main-giga
+          - fqbn: "arduino:zephyr_main:opta"
+            platform: |
+              - name: arduino:zephyr_main
+            artifact-name-suffix: arduino-zephyr_main-opta
 
     steps:
       - name: Checkout repository

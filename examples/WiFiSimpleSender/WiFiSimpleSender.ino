@@ -17,6 +17,8 @@
   #include <WiFi101.h>
 #elif defined(ARDUINO_ARCH_ESP8266)
   #include <ESP8266WiFi.h>
+#elif defined(ARDUINO_ARCH_ZEPHYR)
+  #include <WiFi.h>
 #elif defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_NICLA_VISION) || defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_GIGA) || defined(ARDUINO_OPTA)
   #include <WiFi.h>
 #elif defined(ARDUINO_PORTENTA_C33)
