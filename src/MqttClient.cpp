@@ -210,7 +210,7 @@ int MqttClient::endMessage()
 {
   if (!_txStreamPayload) {
     if (!publishHeader(_txPayloadBufferIndex) ||
-        (clientWrite(_txPayloadBuffer, _txPayloadBufferIndex) != _txPayloadBufferIndex)) {
+        (clientWrite(_txPayloadBuffer, _txPayloadBufferIndex) < _txPayloadBufferIndex)) {
       stop();
 
       return 0;
@@ -448,9 +448,9 @@ void MqttClient::poll()
         if ((b & 0x80) == 0) { // length done
           bool malformedResponse = false;
 
-          if (_rxType == MQTT_CONNACK || 
+          if (_rxType == MQTT_CONNACK ||
               _rxType == MQTT_PUBACK  ||
-              _rxType == MQTT_PUBREC  || 
+              _rxType == MQTT_PUBREC  ||
               _rxType == MQTT_PUBCOMP ||
               _rxType == MQTT_UNSUBACK) {
             malformedResponse = (_rxFlags != 0x00 || _rxLength != 2);
@@ -458,7 +458,7 @@ void MqttClient::poll()
             malformedResponse = ((_rxFlags & 0x06) == 0x06);
           } else if (_rxType == MQTT_PUBREL) {
             malformedResponse = (_rxFlags != 0x02 || _rxLength != 2);
-          } else if (_rxType == MQTT_SUBACK) { 
+          } else if (_rxType == MQTT_SUBACK) {
             malformedResponse = (_rxFlags != 0x00 || _rxLength != 3);
           } else if (_rxType == MQTT_PINGRESP) {
             malformedResponse = (_rxFlags != 0x00 || _rxLength != 0);
@@ -531,7 +531,7 @@ void MqttClient::poll()
         if (_rxMessageIndex == 2) {
           _rxMessageTopicLength = (_rxMessageBuffer[0] << 8) | _rxMessageBuffer[1];
           _rxLength -= 2;
-          
+
           _rxMessageTopic = "";
           _rxMessageTopic.reserve(_rxMessageTopicLength);
 
@@ -722,7 +722,7 @@ int MqttClient::read(uint8_t *buf, size_t size)
 
       if (b == -1) {
         break;
-      } 
+      }
 
       result++;
       *buf++ = b;
