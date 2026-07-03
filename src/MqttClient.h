@@ -50,6 +50,7 @@ public:
   void onMessage(MessageCallback callback);
 #else
   inline void setClient(Client& client) { _client = &client; }
+  inline void setClient(Client* client) { _client = client; }
   void onMessage(void(*)(int));
 #endif
 
