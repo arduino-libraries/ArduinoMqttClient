@@ -259,6 +259,71 @@ int MqttClient::endMessage()
   return 1;
 }
 
+/**
+ * @brief  Publish a MQTT message to the broker.
+ * 
+ * @param  topic The topic to publish to. 
+ * @param  payload The payload to publish.
+ * @param  retain Publish the MQTT message with the retain flag. Default false.
+ * @param  qos The quality of service of the MQTT message. [0 .. 2]. Default 0.
+ * @param  dup Set or reset the duplicate flag of the MQTT message. Default false (reset).
+ * @return 0 - Failed to send message.
+ *         1 - Successfully send message.
+ */
+int MqttClient::publish(const char* topic, const char* payload, bool retain, uint8_t qos, bool dup) {
+  int ret = beginMessage(topic, strlen_P(payload), retain, qos, dup);
+  if (ret) {
+    print(payload);
+    ret = endMessage();
+  }
+  return ret;
+}
+
+/**
+ * @brief  Publish a MQTT message to the broker.
+ * 
+ * @param  topic The topic to publish to. 
+ * @param  payload The payload to publish.
+ * @param  retain Publish the MQTT message with the retain flag. Default false.
+ * @param  qos The quality of service of the MQTT message. [0 .. 2]. Default 0.
+ * @param  dup Set or reset the duplicate flag of the MQTT message. Default false (reset).
+ * @return 0 - Failed to send message.
+ *         1 - Successfully send message.
+ */
+int MqttClient::publish(const String& topic, const char* payload, bool retain, uint8_t qos, bool dup) {
+  return publish(topic.c_str(), payload, retain, qos, dup);
+}
+
+/**
+ * @brief  Publish a MQTT message to the broker.
+ * 
+ * @param  topic The topic to publish to. 
+ * @param  payload The payload to publish.
+ * @param  retain Publish the MQTT message with the retain flag. Default false.
+ * @param  qos The quality of service of the MQTT message. [0 .. 2]. Default 0.
+ * @param  dup Set or reset the duplicate flag of the MQTT message. Default false (reset).
+ * @return 0 - Failed to send message.
+ *         1 - Successfully send message.
+ */
+int MqttClient::publish(const char* topic, String& payload, bool retain, uint8_t qos, bool dup) {
+  return publish(topic, payload.c_str(), retain, qos, dup);
+}
+
+/**
+ * @brief  Publish a MQTT message to the broker.
+ * 
+ * @param  topic The topic to publish to. 
+ * @param  payload The payload to publish.
+ * @param  retain Publish the MQTT message with the retain flag. Default false.
+ * @param  qos The quality of service of the MQTT message. [0 .. 2]. Default 0.
+ * @param  dup Set or reset the duplicate flag of the MQTT message. Default false (reset).
+ * @return 0 - Failed to send message.
+ *         1 - Successfully send message.
+ */
+int MqttClient::publish(const String& topic, String& payload, bool retain, uint8_t qos, bool dup) {
+  return publish(topic.c_str(), payload.c_str(), retain, qos, dup);
+}
+
 int MqttClient::beginWill(const char* topic, unsigned short size, bool retain, uint8_t qos)
 {
   int topicLength = strlen(topic);
