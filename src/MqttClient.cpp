@@ -473,7 +473,7 @@ void MqttClient::poll()
           }
 
           if (_rxType == MQTT_PUBLISH) {
-            _rxMessageDup = (_rxFlags & 0x80) != 0;
+            _rxMessageDup = (_rxFlags & 0x08) != 0;
             _rxMessageQoS = (_rxFlags >> 1) & 0x03;
             _rxMessageRetain = (_rxFlags & 0x01);
 
